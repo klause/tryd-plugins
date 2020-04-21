@@ -1,0 +1,16 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: VTC Indicator
+Bundle-SymbolicName: kan.eclipsetrader.charts.indicators.vtc;singleton:=true
+Bundle-Version: 1.0.0
+Bundle-Vendor: Klause
+Bundle-Localization: plugin
+Export-Package: kan.eclipsetrader.charts.indicators
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.expressions,
+ org.eclipse.core.runtime,
+ net.sourceforge.eclipsetrader.core,
+ net.sourceforge.eclipsetrader.charts
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Automatic-Module-Name: VTC-Indicator
+Bundle-ActivationPolicy: lazy

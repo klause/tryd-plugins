@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin>
+   <extension-point id="indicators" name="Chart Indicators" schema="schema/indicators.exsd"/>
+   <extension
+         point="net.sourceforge.eclipsetrader.charts.indicators">
+      <indicator
+            class="kan.eclipsetrader.charts.indicators.VtcIndicator"
+            code="VTC"
+            description="%indicator.Vtc.description"
+            group="net.sourceforge.eclipsetrader.charts.dataMarket"
+            id="net.sourceforge.eclipsetrader.indicators.vtc"
+            isInputSource="false"
+            name="%indicator.Vtc.name">
+         <preferencePage
+               class="kan.eclipsetrader.charts.indicators.VtcIndicatorPreferencePage"
+               description="%indicator.Vtc.preferencesPage.description"
+               title="%indicator.Vtc.preferencesPage.title">
+         </preferencePage>
+      </indicator>
+   </extension>
+</plugin>
