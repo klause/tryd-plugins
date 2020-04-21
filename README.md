@@ -1,0 +1,2 @@
+# tryd-plugins
+Tryd Plugins
