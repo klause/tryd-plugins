@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin>
+   <extension-point id="indicators" name="Chart Indicators" schema="schema/indicators.exsd"/>
+   <extension
+         point="net.sourceforge.eclipsetrader.charts.indicators">
+      <indicator
+            class="kan.eclipsetrader.charts.indicators.vwapvariation.VwapVariationIndicator"
+            code="VARVWAP"
+            description="%indicator.VwapVariation.description"
+            group="net.sourceforge.eclipsetrader.charts.volume"
+            id="kan.eclipsetrader.indicators.vwapvariation"
+            isInputSource="false"
+            name="%indicator.VwapVariation.name">
+         <preferencePage
+               class="kan.eclipsetrader.charts.indicators.vwapvariation.VwapVariationIndicatorPreferencePage"
+               description="%indicator.VwapVariation.preferencesPage.description"
+               title="%indicator.VwapVariation.preferencesPage.title">
+         </preferencePage>
+      </indicator>
+   </extension>
+</plugin>
