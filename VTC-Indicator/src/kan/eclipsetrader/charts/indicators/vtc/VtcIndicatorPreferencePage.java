@@ -1,7 +1,11 @@
-package kan.eclipsetrader.charts.indicators;
+package kan.eclipsetrader.charts.indicators.vtc;
 
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Spinner;
 
 import net.sourceforge.eclipsetrader.charts.IndicatorPlugin;
 import net.sourceforge.eclipsetrader.charts.IndicatorPluginPreferencePage;
@@ -12,7 +16,21 @@ public class VtcIndicatorPreferencePage extends IndicatorPluginPreferencePage
     @Override
     protected void doCreateContents(final Composite composite) {
     	
-        addIntegerValueSelector(composite, "vtcValue", Messages.VtcIndicatorPreferencePage_Value, 1, 99999, 1);
+        Button valueFromNewsSelector = addBooleanSelector(composite, "getValueFromNews", Messages.VtcIndicatorPreferencePage_GetValueFromNews, true);
+        
+    	final Spinner vtcValueSelector = addIntegerValueSelector(composite, "vtcValue", Messages.VtcIndicatorPreferencePage_Value, 1, 99999, 1);
+    	vtcValueSelector.setEnabled(!valueFromNewsSelector.getSelection());
+
+    	valueFromNewsSelector.addSelectionListener(new SelectionAdapter() {
+    		@Override
+    		public void widgetSelected(SelectionEvent e) {
+    			Button button = (Button) e.widget;
+    			vtcValueSelector.setEnabled(!button.getSelection());
+    		}
+		});
+    	
+        addLineTypeSelector(composite, "lineTypeVtc", Messages.VtcIndicatorPreferencePage_LineType_Vtc, PlotLineType.DASH, "lineThicknessVtc", 1);
+        addColorSelector(composite, "lineColorVtc", Messages.VtcIndicatorPreferencePage_LineColor_Vtc, VtcIndicator.DEFAULT_LINE_COLLOR);
 
         addLineTypeSelector(composite, "lineTypeVariacaoPositiva", Messages.VtcIndicatorPreferencePage_LineType_VariacaoPositiva, IndicatorPlugin.DEFAULT_PLOT_LINE_TYPE, "lineThicknessVariacaoPositiva", 1);
         addColorSelector(composite, "lineColorVariacaoPositiva", Messages.VtcIndicatorPreferencePage_LineColor_VariacaoPositiva, VtcIndicator.DEFAULT_LINE_COLLOR);

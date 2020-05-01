@@ -5,7 +5,7 @@
    <extension
          point="net.sourceforge.eclipsetrader.charts.indicators">
       <indicator
-            class="kan.eclipsetrader.charts.indicators.VtcIndicator"
+            class="kan.eclipsetrader.charts.indicators.vtc.VtcIndicator"
             code="VTC"
             description="%indicator.Vtc.description"
             group="net.sourceforge.eclipsetrader.charts.dataMarket"
@@ -13,7 +13,7 @@
             isInputSource="false"
             name="%indicator.Vtc.name">
          <preferencePage
-               class="kan.eclipsetrader.charts.indicators.VtcIndicatorPreferencePage"
+               class="kan.eclipsetrader.charts.indicators.vtc.VtcIndicatorPreferencePage"
                description="%indicator.Vtc.preferencesPage.description"
                title="%indicator.Vtc.preferencesPage.title">
          </preferencePage>
