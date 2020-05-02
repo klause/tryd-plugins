@@ -51,9 +51,9 @@ Para colocá-lo no gráfico, acesse Novo Indicador -> Dados de Mercado -> Varia�
 
 Configure de acrodo com suas preferências.
 
-Se a opção "Obter Valor do VTC" estiver marcada, o indicador será mostrado no gráfico assim que chegar a notícia do call do VTC.
+Se a opção "Obter Valor do VTC das notícias" estiver marcada, o indicador será mostrado no gráfico assim que chegar a notícia do call do VTC.
 
-Para o indicador funcionar no replay, desmarque a opção "Obter Valor do VTC" digite o valor no campo "Valor do VTC".
+Para o indicador funcionar no replay, desmarque a opção "Obter Valor do VTC das notícias" e digite o valor no campo "Valor do VTC".
 
 ## Variação da VWAP
 
