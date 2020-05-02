@@ -174,7 +174,7 @@ public class VwapVariationIndicator extends IndicatorPlugin implements IHistoryF
 					break;
 				}
 			}
-			output.setMainPlotLine(plotLineVwap);
+			output.add(plotLineVwap);
 			
 			for (Entry<Float, Double> entry : vwapVariationValues.entrySet()) {
 				PlotLine varPlotLine = createVwapVariationPlotLine(entry.getKey(), entry.getValue());
@@ -326,7 +326,7 @@ public class VwapVariationIndicator extends IndicatorPlugin implements IHistoryF
 			return true;
 		}
 
-		if ((currentGraphTimeInterval.isIntraday() || currentGraphTimeInterval.isTimed()) && !dateTimeUtils.isSameDay(graphDateRef, this.getBarData().getEnd())) {
+		if ((currentGraphTimeInterval.isIntraday() || !currentGraphTimeInterval.isTimed()) && !dateTimeUtils.isSameDay(graphDateRef, this.getBarData().getEnd())) {
 			return true;
 		}
 		
