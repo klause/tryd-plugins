@@ -58,3 +58,7 @@ Para o indicador funcionar no replay, desmarque a opção "Obter Valor do VTC" d
 ## Variação da VWAP
 
 Para colocá-lo no gráfico, acesse Novo Indicador -> Volume -> Variação da VWAP
+
+## Removendo os indicadores do gráfico
+
+Para remover o indicador do gráfico caso ele não estiver visível, acesse o menu do gráfico com o botão direito do mouse e vá em Mais -> Mudar Visibilidade de Objetos. Selecionde o indicador que deseja remover e pressione a tecla Delete.
