@@ -23,8 +23,10 @@ Este procedimento é necessário para que a plataforma seja restaurada com rapid
 1. Com a plataforma Tryd aberta, vá no menu Ajuda -> Instalar Novo Programa
 2. Ao lado do combo "Instalar de:", clice no botão "Adicionar..."
 3. Na janela "Adicionar Repositório" preencha os campos:
+
   Nome: KAN Tryd Plugins
   Localização: https://trydplugins.herokuapp.com/kan-update-site
+
 4. Clique OK
 5. No combo "Instalar de:", selecione "KAN Tryd Plugins"
 6. No quadro abaixo, clique na seta à esquerda de "Tryd plugins" para mostrar os plugins disponíveis
