@@ -13,7 +13,9 @@ O código fonte dos plugins é aberto, fique a vontade para contribuir, reportar
 ## Antes de instalar faça backup
 
 Realize um backup completo da pasta onde o Tryd está instalado, geralmente C:\Tryd5
+
 Compacte a pasta em um arquivo zip e mova para um outro local.
+
 Este procedimento é necessário para que a plataforma seja restaurada com rapidez caso haja algum bug nos indicadores instalado que impeçam a inicialização do Tryd.
 
 ## Procedimento
@@ -23,15 +25,16 @@ Este procedimento é necessário para que a plataforma seja restaurada com rapid
 3. Na janela "Adicionar Repositório" preencha os campos:
   Nome: KAN Tryd Plugins
   Localização: https://trydplugins.herokuapp.com/kan-update-site
-4. No combo "Instalar de:", selecione "KAN Tryd Plugins"
-5. No quadro abaixo, clique na seta à esquerda de "Tryd plugins"
-6. Selecione os plugins que deseja instalar e clique em Avançar
-7. Prossiga cliando no botão Avançar e aceite os termos de licença quando solicitado
+4. Clique OK
+5. No combo "Instalar de:", selecione "KAN Tryd Plugins"
+6. No quadro abaixo, clique na seta à esquerda de "Tryd plugins" para mostrar os plugins disponíveis
+7. Selecione os plugins que deseja instalar e clique em Avançar
+8. Prossiga clicando no botão Avançar e aceite os termos de licença quando solicitado
 
 # Desinstalação
 
 1. Acesse o menu Ajuda -> Sobre o Tryd
 2. Clique em "Detalhes da Instalaçao"
-3. Seleciones os plugins de deseja desinstalar
+3. Selecione os plugins de deseja desinstalar
 4. Clique no botão "Desinstalar"
 
