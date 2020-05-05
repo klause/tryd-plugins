@@ -10,7 +10,6 @@ import java.util.Map.Entry;
 import org.eclipse.swt.graphics.RGB;
 
 import net.sourceforge.eclipsetrader.charts.GroupingMode;
-import net.sourceforge.eclipsetrader.charts.Indicator;
 import net.sourceforge.eclipsetrader.charts.IndicatorPlugin;
 import net.sourceforge.eclipsetrader.charts.PlotLine;
 import net.sourceforge.eclipsetrader.charts.ScaleLevel;
@@ -62,6 +61,10 @@ public class VwapVariationIndicator extends IndicatorPlugin implements IHistoryF
 	
 	private boolean updatingHistory = false;
 	
+	private boolean isReplayMode;
+	
+	private boolean historyDataNotAvailable;
+	
     static {
         DEFAULT_LINE_COLLOR = new RGB(255, 201, 14);
         (DEFAULT_V_SCALE_VALUE = VerticalScaleValue.createDefault()).setShowValue(true);
@@ -83,6 +86,8 @@ public class VwapVariationIndicator extends IndicatorPlugin implements IHistoryF
 
         this.textSide = VwapVariationIndicator.DEFAULT_TEXT_SIDE;
         this.verticalScaleValue = DEFAULT_V_SCALE_VALUE;
+        
+        this.isReplayMode = CorePlugin.getDefault().isReplayMode();
     }
     
     @Override
@@ -92,12 +97,17 @@ public class VwapVariationIndicator extends IndicatorPlugin implements IHistoryF
 			return;
 		}
 		
+		if (this.historyDataNotAvailable) {
+			return;
+		}
+		
 		Date endDate = this.getBarData().getEnd();
 		
 		if (needRecalculation()) {
 			
 			this.vwapValue = null;
 			this.graphDateRef = null;
+			this.historyDataNotAvailable = false;
 			this.workingTimeInterval = this.getBarData().getInterval();
 			this.vwapRefTimeInterval = getVwapRefTimeInterval(); 
 			
@@ -152,7 +162,6 @@ public class VwapVariationIndicator extends IndicatorPlugin implements IHistoryF
 		}
 		
 		if (this.vwapValue != null) {
-	    	final Indicator output = this.getOutput();
 
 	    	final PlotLine plotLineVwap;
 
@@ -174,15 +183,15 @@ public class VwapVariationIndicator extends IndicatorPlugin implements IHistoryF
 					break;
 				}
 			}
-			output.add(plotLineVwap);
+			this.getOutput().add(plotLineVwap);
 			
 			for (Entry<Float, Double> entry : vwapVariationValues.entrySet()) {
 				PlotLine varPlotLine = createVwapVariationPlotLine(entry.getKey(), entry.getValue());
-				output.add(varPlotLine);
+				this.getOutput().add(varPlotLine);
 			}
 			
-	        output.setShowValueVerticalScale(this.verticalScaleValue);
-	        output.setScaleLevel(ScaleLevel.SIMPLE);
+			this.getOutput().setShowValueVerticalScale(this.verticalScaleValue);
+			this.getOutput().setScaleLevel(ScaleLevel.SIMPLE);
 		}
 		
     }
@@ -218,6 +227,11 @@ public class VwapVariationIndicator extends IndicatorPlugin implements IHistoryF
     }
     
 	private void loadHistory(Security security, TimeInterval interval) {
+		if (this.isReplayMode) {
+			Functions.logMessage("Replay mode. Could not load history data.");
+			this.historyDataNotAvailable = true;
+		}
+		
 		if (this.updatingHistory) {
 			return;
 		}

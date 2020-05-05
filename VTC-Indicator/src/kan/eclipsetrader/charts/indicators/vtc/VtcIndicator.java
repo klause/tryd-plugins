@@ -14,7 +14,6 @@ import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.swt.graphics.RGB;
 import org.osgi.service.prefs.Preferences;
 
-import net.sourceforge.eclipsetrader.charts.Indicator;
 import net.sourceforge.eclipsetrader.charts.IndicatorPlugin;
 import net.sourceforge.eclipsetrader.charts.PlotLine;
 import net.sourceforge.eclipsetrader.charts.ScaleLevel;
@@ -77,9 +76,9 @@ public class VtcIndicator extends IndicatorPlugin
 	
 	private DateTimeUtils dateTimeUtils = DateTimeUtils.getInstance();
 
-	private double valueVtcVariacaoPositiva;
+	private Double valueVtcVariacaoPositiva;
 
-	private double valueVtcVariacaoNegativa;
+	private Double valueVtcVariacaoNegativa;
 	
 	private boolean flagLoadedFromPrefs = false;
 	
@@ -88,6 +87,8 @@ public class VtcIndicator extends IndicatorPlugin
 	private Date loadedPrefsVtcDate;
 
 	private Double loadedPrefsVtcValue;
+	
+	private boolean isReplayMode;
 
     static {
         DEFAULT_LINE_COLLOR = new RGB(255, 201, 14);
@@ -112,72 +113,91 @@ public class VtcIndicator extends IndicatorPlugin
         
         this.textSide = VtcIndicator.DEFAULT_TEXT_SIDE;
         this.verticalScaleValue = DEFAULT_V_SCALE_VALUE;
+        
+        this.isReplayMode = CorePlugin.getDefault().isReplayMode();
     }
     
     @Override
-    protected void doCalculate() {
+	protected void doCalculate() {
 
-    	if (this.getBarData() == null || this.getBarData().size() <= 0) {
-    		return;
-    	}
-    	
-    	initVencimentoDollar();
+		if (this.getBarData() != null || this.getBarData().size() > 0) {
 
-    	final Indicator output = this.getOutput();
-        
-//        Functions.logMessage("doCalculate() " + vtcDateFound + " - " + valueVtc);
-        
-        if (this.getValueFromNews) {
-    		setValueFromLoadedPreferences();
-            checkNewsForVtc();
-        }
+			initVencimentoDollar();
 
-        if (vtcDateFound != null || valueVtc > 0) {
-            final PlotLine plotLineVariacaoPositiva;
-            final PlotLine plotLineVariacaoNegativa;
-            final PlotLine plotLineVtc;
-            
-            (plotLineVtc = new PlotLine()).setType(this.lineTypeVtc);
-            plotLineVtc.setLineWidth(this.lineThicknessVtc);
-            plotLineVtc.setColor(this.lineColorVtc);
-            plotLineVtc.setTextSide(this.textSide);
+//          Functions.logMessage("doCalculate() " + vtcDateFound + " - " + valueVtc);
 
-            (plotLineVariacaoPositiva = new PlotLine()).setType(this.lineTypeVariacaoPositiva);
-            plotLineVariacaoPositiva.setLineWidth(this.lineThicknessVariacaoPositiva);
-            plotLineVariacaoPositiva.setColor(this.lineColorVariacaoPositiva);
-            plotLineVariacaoPositiva.setTextSide(this.textSide);
+			if (this.getValueFromNews) {
+				if (lastNewsFeedRestart == 0) {
+					lastNewsFeedRestart = (new Date()).getTime() - (1000 * 60 * 2);
+				}
+				setValueFromLoadedPreferences();
+				checkNewsForVtc();
+			}
 
-            (plotLineVariacaoNegativa = new PlotLine()).setType(this.lineTypeVariacaoNegativa);
-            plotLineVariacaoNegativa.setLineWidth(this.lineThicknessVariacaoNegativa);
-            plotLineVariacaoNegativa.setColor(this.lineColorVariacaoNegativa);
-            plotLineVariacaoNegativa.setTextSide(this.textSide);
+			if (vtcDateFound != null || valueVtc > 0) {
+				final PlotLine plotLineVariacaoPositiva;
+				final PlotLine plotLineVariacaoNegativa;
+				final PlotLine plotLineVtc;
 
-            BarData barData = this.getBarData();
-            for (int j = 0; j < barData.size(); ++j) {
-            	if (dateTimeUtils.isSameDay(barData.get(j).getDate(), vtcDateFound)) {
-                	plotLineVtc.append(this.valueVtc);
-                	plotLineVariacaoPositiva.append(this.valueVtcVariacaoPositiva);
-                	plotLineVariacaoNegativa.append(this.valueVtcVariacaoNegativa);
-            	}
-            }
+				calculateVtcVariations();
 
-            plotLineVtc.setLabel("VTC");
-            plotLineVtc.setText("VTC");
+				plotLineVtc = new PlotLine();
+				plotLineVariacaoPositiva = new PlotLine();
+				plotLineVariacaoNegativa = new PlotLine();
 
-            plotLineVariacaoPositiva.setLabel("VTC +0,5%");
-            plotLineVariacaoPositiva.setText("VTC +0,5%");
+				Date dateToCompare = null;
+				if (this.getValueFromNews) {
+					dateToCompare = this.vtcDateFound;
+				} else {
+					dateToCompare = getBarData().getEnd();
+				}
 
-            plotLineVariacaoNegativa.setLabel("VTC -0,5%");
-            plotLineVariacaoNegativa.setText("VTC -0,5%");
-            
-            output.add(plotLineVariacaoPositiva);
-            output.add(plotLineVariacaoNegativa);
-            output.add(plotLineVtc);
-        }
+				BarData barData = this.getBarData();
+				for (int j = 0; j < barData.size(); ++j) {
+					if (dateTimeUtils.isSameDay(barData.get(j).getDate(), dateToCompare)) {
+						plotLineVtc.append(this.valueVtc);
+						plotLineVariacaoPositiva.append(this.valueVtcVariacaoPositiva);
+						plotLineVariacaoNegativa.append(this.valueVtcVariacaoNegativa);
+					}
+				}
 
-        output.setShowValueVerticalScale(this.verticalScaleValue);
-        output.setScaleLevel(ScaleLevel.SIMPLE);
-    }
+				if (plotLineVtc.getSize() > 0) {
+
+					plotLineVtc.setType(this.lineTypeVtc);
+					plotLineVtc.setLineWidth(this.lineThicknessVtc);
+					plotLineVtc.setColor(this.lineColorVtc);
+					plotLineVtc.setTextSide(this.textSide);
+
+					plotLineVariacaoPositiva.setType(this.lineTypeVariacaoPositiva);
+					plotLineVariacaoPositiva.setLineWidth(this.lineThicknessVariacaoPositiva);
+					plotLineVariacaoPositiva.setColor(this.lineColorVariacaoPositiva);
+					plotLineVariacaoPositiva.setTextSide(this.textSide);
+
+					plotLineVariacaoNegativa.setType(this.lineTypeVariacaoNegativa);
+					plotLineVariacaoNegativa.setLineWidth(this.lineThicknessVariacaoNegativa);
+					plotLineVariacaoNegativa.setColor(this.lineColorVariacaoNegativa);
+					plotLineVariacaoNegativa.setTextSide(this.textSide);
+
+					plotLineVtc.setLabel("VTC");
+					plotLineVtc.setText("VTC");
+
+					plotLineVariacaoPositiva.setLabel("VTC +0,5%");
+					plotLineVariacaoPositiva.setText("VTC +0,5%");
+
+					plotLineVariacaoNegativa.setLabel("VTC -0,5%");
+					plotLineVariacaoNegativa.setText("VTC -0,5%");
+
+					this.getOutput().add(plotLineVariacaoPositiva);
+					this.getOutput().add(plotLineVariacaoNegativa);
+					this.getOutput().add(plotLineVtc);
+
+					this.getOutput().setShowValueVerticalScale(this.verticalScaleValue);
+					this.getOutput().setScaleLevel(ScaleLevel.SIMPLE);
+				}
+
+			}
+		}
+	}
     
     @Override
     public void doSetParameters(final Settings settings) {
@@ -224,6 +244,10 @@ public class VtcIndicator extends IndicatorPlugin
     }
     
     private void checkNewsForVtc() {
+    	
+    	if (this.isReplayMode) {
+    		return;
+    	}
 
     	if (vtcDateFound != null && !dateTimeUtils.isSameDay(vtcDateFound, getBarData().getEnd())) {
     		vtcDateFound = null;
@@ -330,8 +354,6 @@ public class VtcIndicator extends IndicatorPlugin
     				Functions.logMessage("Valor de VTC encontrado na notícia: " + valueVtc);
     				saveVtcValue();
 
-    				calculateVtcVariations();
-
     	            CorePlugin.getRepository().allNews().deleteObserver(this.listObserver);
     	            this.listObserver = null;
     			}
@@ -343,8 +365,10 @@ public class VtcIndicator extends IndicatorPlugin
     }
     
     private void calculateVtcVariations() {
-        this.valueVtcVariacaoPositiva = Functions.roundIntoSecurityIncrementPrice(this.valueVtc + (this.valueVtc * 0.005), getBarData().getSecurity());
-        this.valueVtcVariacaoNegativa = Functions.roundIntoSecurityIncrementPrice(this.valueVtc - (this.valueVtc * 0.005), getBarData().getSecurity());
+    	if (this.valueVtcVariacaoPositiva == null && this.valueVtcVariacaoNegativa == null) {
+            this.valueVtcVariacaoPositiva = Functions.roundIntoSecurityIncrementPrice(this.valueVtc + (this.valueVtc * 0.005), getBarData().getSecurity());
+            this.valueVtcVariacaoNegativa = Functions.roundIntoSecurityIncrementPrice(this.valueVtc - (this.valueVtc * 0.005), getBarData().getSecurity());
+    	}
     }
     
     @Override
@@ -359,7 +383,6 @@ public class VtcIndicator extends IndicatorPlugin
     	if (this.loadedPrefsVtcDate != null && this.loadedPrefsVtcValue != null && getBarData() != null && dateTimeUtils.isSameDay(this.loadedPrefsVtcDate, getBarData().getEnd())) {
 			this.vtcDateFound = this.loadedPrefsVtcDate;
 			this.valueVtc = this.loadedPrefsVtcValue;
-			calculateVtcVariations();
     	}
     }
     
