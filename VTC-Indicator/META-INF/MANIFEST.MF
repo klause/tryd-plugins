@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: VTC Indicator
 Bundle-SymbolicName: kan.eclipsetrader.charts.indicators.vtc;singleton:=true
-Bundle-Version: 1.0.4
+Bundle-Version: 1.0.5
 Bundle-Vendor: Klause
 Bundle-Localization: plugin
 Export-Package: kan.eclipsetrader.charts.indicators.vtc

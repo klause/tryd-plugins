@@ -207,7 +207,7 @@ public class VtcIndicator extends IndicatorPlugin
     	this.getValueFromNews = settings.getBoolean("getValueFromNews", true);
 
     	if (!this.getValueFromNews) {
-        	this.valueVtc = settings.getInteger("vtcValue", 0).doubleValue();
+        	setVtcValue(settings.getInteger("vtcValue", 0).doubleValue());
     	} else if (!flagLoadedFromPrefs) {
     		loadVtcValueFromPreferences();
     	}
@@ -241,6 +241,12 @@ public class VtcIndicator extends IndicatorPlugin
             sb.append(Messages.VtcIndicator_NotApplicableMessage);
         }
         return b;
+    }
+    
+    private void setVtcValue(Double value) {
+    	this.valueVtc = value;
+        this.valueVtcVariacaoPositiva = null;
+        this.valueVtcVariacaoNegativa = null;
     }
     
     private void checkNewsForVtc() {
@@ -382,7 +388,7 @@ public class VtcIndicator extends IndicatorPlugin
     private void setValueFromLoadedPreferences() {
     	if (this.loadedPrefsVtcDate != null && this.loadedPrefsVtcValue != null && getBarData() != null && dateTimeUtils.isSameDay(this.loadedPrefsVtcDate, getBarData().getEnd())) {
 			this.vtcDateFound = this.loadedPrefsVtcDate;
-			this.valueVtc = this.loadedPrefsVtcValue;
+			setVtcValue(this.loadedPrefsVtcValue);
     	}
     }
     
@@ -415,11 +421,11 @@ public class VtcIndicator extends IndicatorPlugin
 			}
 		} catch (NumberFormatException e) {
 			this.vtcDateFound = null;
-			this.valueVtc = null;
+			setVtcValue(null);
 			Functions.logError("Error reading VTC_SAVED_DATE from preferences", e);
 		} catch (ParseException e) {
 			this.vtcDateFound = null;
-			this.valueVtc = null;
+			setVtcValue(null);
 			Functions.logError("Error reading VTC_SAVED_VALUE from preferences", e);
 		} finally {
 			flagLoadedFromPrefs = true;
