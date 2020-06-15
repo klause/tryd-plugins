@@ -1,4 +1,5 @@
 package kan.eclipsetrader.charts.indicators.vtc;
+import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -207,7 +208,13 @@ public class VtcIndicator extends IndicatorPlugin
     	this.getValueFromNews = settings.getBoolean("getValueFromNews", true);
 
     	if (!this.getValueFromNews) {
-        	setVtcValue(settings.getInteger("vtcValue", 0).doubleValue());
+    		try {
+				NumberFormat nf = NumberFormat.getInstance();
+				nf.setGroupingUsed(true);
+				setVtcValue(nf.parse(settings.getString("vtcValue", "0")).doubleValue());
+			} catch (ParseException e) {
+				Functions.logError("Parsing value from vtcValue field", e);
+			}
     	} else if (!flagLoadedFromPrefs) {
     		loadVtcValueFromPreferences();
     	}

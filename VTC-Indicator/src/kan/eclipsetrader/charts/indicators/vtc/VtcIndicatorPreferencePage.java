@@ -3,13 +3,13 @@ package kan.eclipsetrader.charts.indicators.vtc;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Spinner;
 
 import net.sourceforge.eclipsetrader.charts.IndicatorPlugin;
 import net.sourceforge.eclipsetrader.charts.IndicatorPluginPreferencePage;
 import net.sourceforge.eclipsetrader.core.db.PlotLineType;
+import net.sourceforge.eclipsetrader.core.ui.widgets.FlatCombo;
+import net.sourceforge.eclipsetrader.core.ui.widgets.LongSpinner;
 
 public class VtcIndicatorPreferencePage extends IndicatorPluginPreferencePage
 {
@@ -18,7 +18,7 @@ public class VtcIndicatorPreferencePage extends IndicatorPluginPreferencePage
     	
         Button valueFromNewsSelector = addBooleanSelector(composite, "getValueFromNews", Messages.VtcIndicatorPreferencePage_GetValueFromNews, true);
         
-    	final Spinner vtcValueSelector = addIntegerValueSelector(composite, "vtcValue", Messages.VtcIndicatorPreferencePage_Value, 1, 99999, 1);
+    	final LongSpinner vtcValueSelector = addIntegerValueSelector(composite, "vtcValue", Messages.VtcIndicatorPreferencePage_Value, 1, 99999, 1);
     	vtcValueSelector.setEnabled(!valueFromNewsSelector.getSelection());
 
     	valueFromNewsSelector.addSelectionListener(new SelectionAdapter() {
@@ -43,7 +43,7 @@ public class VtcIndicatorPreferencePage extends IndicatorPluginPreferencePage
     }
     
     @Override
-    protected void doFillLineTypeComboSelector(final Combo combo) {
+    protected void doFillLineTypeComboSelector(final FlatCombo combo) {
         combo.add(PlotLineType.LINE.getName());
         combo.setData(PlotLineType.LINE.getName(), (Object)PlotLineType.LINE);
         combo.add(PlotLineType.DOT.getName());
