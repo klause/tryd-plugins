@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin>
+   <extension
+         point="net.sourceforge.eclipsetrader.charts.indicators">
+      <indicator
+            class="kan.eclipsetrader.charts.indicators.volptax.VolPtaxIndicator"
+            code="VOLPTAX"
+            description="%indicator.VolPtax.description"
+            group="net.sourceforge.eclipsetrader.charts.dataMarket"
+            id="kan.eclipsetrader.indicators.volptax"
+            isInputSource="false"
+            name="%indicator.VolPtax.name">
+         <preferencePage
+               class="kan.eclipsetrader.charts.indicators.volptax.VolPtaxIndicatorPreferencePage"
+               description="%indicator.VolPtax.preferencesPage.description"
+               title="%indicator.VolPtax.preferencesPage.title">
+         </preferencePage>
+      </indicator>
+   </extension>
+</plugin>
