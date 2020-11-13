@@ -13,19 +13,29 @@ import net.sourceforge.eclipsetrader.core.ui.widgets.LongSpinner;
 
 public class VtcIndicatorPreferencePage extends IndicatorPluginPreferencePage
 {
-    @Override
+    public VtcIndicatorPreferencePage() {
+		// TODO Auto-generated constructor stub
+	}
+	
+	@Override
     protected void doCreateContents(final Composite composite) {
     	
         Button valueFromNewsSelector = addBooleanSelector(composite, "getValueFromNews", Messages.VtcIndicatorPreferencePage_GetValueFromNews, true);
         
-    	final LongSpinner vtcValueSelector = addIntegerValueSelector(composite, "vtcValue", Messages.VtcIndicatorPreferencePage_Value, 1, 99999, 1);
-    	vtcValueSelector.setEnabled(!valueFromNewsSelector.getSelection());
+    	final LongSpinner callValueSelector = addIntegerValueSelector(composite, "vtcValue", Messages.VtcIndicatorPreferencePage_LabelCallValue, 1, 99999, 1);
+    	callValueSelector.setEnabled(!valueFromNewsSelector.getSelection());
+
+    	final LongSpinner deltaValueSelector = addDoubleValueSelector(composite, "deltaValue", Messages.VtcIndicatorPreferencePage_LabelDeltaValue, 2, 0.05, 1.0, 0.5);
+    	deltaValueSelector.setEnabled(!valueFromNewsSelector.getSelection());
+    	
+    	callValueSelector.setEnabled(!valueFromNewsSelector.getSelection());
 
     	valueFromNewsSelector.addSelectionListener(new SelectionAdapter() {
     		@Override
     		public void widgetSelected(SelectionEvent e) {
     			Button button = (Button) e.widget;
-    			vtcValueSelector.setEnabled(!button.getSelection());
+    			callValueSelector.setEnabled(!button.getSelection());
+    			deltaValueSelector.setEnabled(!button.getSelection());
     		}
 		});
     	
@@ -53,5 +63,19 @@ public class VtcIndicatorPreferencePage extends IndicatorPluginPreferencePage
         combo.add(PlotLineType.INVISIBLE.getName());
         combo.setData(PlotLineType.INVISIBLE.getName(), (Object)PlotLineType.INVISIBLE);
     }
-    
+
+    /*
+    protected Combo addOrigemPrecoSelector(final Composite composite) {
+        new Label(composite, 0).setText(Messages.VtcIndicatorPreferencePage_LabelOrigemPreco);
+        
+        Combo combo = new Combo(composite, 8);
+        
+        combo.add(Messages.VtcIndicatorPreferencePage_OrigemPreco_CodigoSerie);
+        combo.add(Messages.VtcIndicatorPreferencePage_OrigemPreco_Contrato);
+        combo.select(VtcIndicator.DEFAULT_ORIGEM_PRECO);
+        
+        addControl("priceOrigin", combo);
+        return combo;
+    } */
+
 }

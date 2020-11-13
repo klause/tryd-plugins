@@ -14,7 +14,6 @@ import net.sourceforge.eclipsetrader.charts.IndicatorPlugin;
 import net.sourceforge.eclipsetrader.charts.PlotLine;
 import net.sourceforge.eclipsetrader.charts.ScaleLevel;
 import net.sourceforge.eclipsetrader.charts.Settings;
-import net.sourceforge.eclipsetrader.charts.ch;
 import net.sourceforge.eclipsetrader.charts.indicators.VWAP;
 import net.sourceforge.eclipsetrader.charts.internal.VerticalScaleValue;
 import net.sourceforge.eclipsetrader.core.CorePlugin;
@@ -45,7 +44,7 @@ public class VwapVariationIndicator extends IndicatorPlugin implements IHistoryF
     private int lineThicknessNegativeVariations;
     private RGB lineColorNegativeVariations;
 
-    private ch textSide;
+    private Object textSide;
     private VerticalScaleValue verticalScaleValue;
 
 	private DateTimeUtils dateTimeUtils = DateTimeUtils.getInstance();
@@ -168,7 +167,7 @@ public class VwapVariationIndicator extends IndicatorPlugin implements IHistoryF
 			(plotLineVwap = new PlotLine()).setType(this.lineTypeVwap);
 			plotLineVwap.setLineWidth(this.lineThicknessVwap);
 			plotLineVwap.setColor(this.lineColorVwap);
-			plotLineVwap.setTextSide(this.textSide);
+			plotLineVwap.setTextSide(VwapVariationIndicator.DEFAULT_TEXT_SIDE.getClass().cast(this.textSide));
 			
 			String vwapLineLabel = getVwapLineLabel(this.vwapRefTimeInterval);
 			
@@ -268,7 +267,7 @@ public class VwapVariationIndicator extends IndicatorPlugin implements IHistoryF
 		(plotLine = new PlotLine()).setType(variation < 0 ? this.lineTypeNegativeVariations : this.lineTypePositiveVariations);
 		plotLine.setLineWidth(variation < 0 ? this.lineThicknessNegativeVariations : this.lineThicknessPositiveVariations);
 		plotLine.setColor(variation < 0 ? this.lineColorNegativeVariations : this.lineColorPositiveVariations);
-		plotLine.setTextSide(this.textSide);
+		plotLine.setTextSide(VwapVariationIndicator.DEFAULT_TEXT_SIDE.getClass().cast(this.textSide));
 		String label = String.format("VWAP %+.2f%%", variation);
 		plotLine.setLabel(label);
 		plotLine.setText(label);

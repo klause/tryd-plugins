@@ -1,5 +1,4 @@
 package kan.eclipsetrader.charts.indicators.vtc;
-import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -19,7 +18,6 @@ import net.sourceforge.eclipsetrader.charts.IndicatorPlugin;
 import net.sourceforge.eclipsetrader.charts.PlotLine;
 import net.sourceforge.eclipsetrader.charts.ScaleLevel;
 import net.sourceforge.eclipsetrader.charts.Settings;
-import net.sourceforge.eclipsetrader.charts.ch;
 import net.sourceforge.eclipsetrader.charts.internal.VerticalScaleValue;
 import net.sourceforge.eclipsetrader.core.CorePlugin;
 import net.sourceforge.eclipsetrader.core.DateTimeUtils;
@@ -39,6 +37,7 @@ public class VtcIndicator extends IndicatorPlugin
 
 	public static final String VTC_SAVED_DATE = "VTC_SAVED_DATE";
 	public static final String VTC_SAVED_VALUE = "VTC_SAVED_VALUE";
+	public static final String VTC_SAVED_DELTA = "VTC_SAVED_DELTA";
 	
     static final VerticalScaleValue DEFAULT_V_SCALE_VALUE;
 
@@ -62,7 +61,7 @@ public class VtcIndicator extends IndicatorPlugin
 
     private Double valueVtc;
     
-    private ch textSide;
+    private Object textSide;
     private VerticalScaleValue verticalScaleValue;
 
     private EnhancedObservableList.IListObserver listObserver;
@@ -89,8 +88,12 @@ public class VtcIndicator extends IndicatorPlugin
 
 	private Double loadedPrefsVtcValue;
 	
+	private Double loadedPrefsVtcDelta;
+
 	private boolean isReplayMode;
 
+	private Double delta;
+	
     static {
         DEFAULT_LINE_COLLOR = new RGB(255, 201, 14);
         (DEFAULT_V_SCALE_VALUE = VerticalScaleValue.createDefault()).setShowValue(true);
@@ -167,26 +170,26 @@ public class VtcIndicator extends IndicatorPlugin
 					plotLineVtc.setType(this.lineTypeVtc);
 					plotLineVtc.setLineWidth(this.lineThicknessVtc);
 					plotLineVtc.setColor(this.lineColorVtc);
-					plotLineVtc.setTextSide(this.textSide);
+					plotLineVtc.setTextSide(VtcIndicator.DEFAULT_TEXT_SIDE.getClass().cast(this.textSide));
 
 					plotLineVariacaoPositiva.setType(this.lineTypeVariacaoPositiva);
 					plotLineVariacaoPositiva.setLineWidth(this.lineThicknessVariacaoPositiva);
 					plotLineVariacaoPositiva.setColor(this.lineColorVariacaoPositiva);
-					plotLineVariacaoPositiva.setTextSide(this.textSide);
+					plotLineVariacaoPositiva.setTextSide(VtcIndicator.DEFAULT_TEXT_SIDE.getClass().cast(this.textSide));
 
 					plotLineVariacaoNegativa.setType(this.lineTypeVariacaoNegativa);
 					plotLineVariacaoNegativa.setLineWidth(this.lineThicknessVariacaoNegativa);
 					plotLineVariacaoNegativa.setColor(this.lineColorVariacaoNegativa);
-					plotLineVariacaoNegativa.setTextSide(this.textSide);
+					plotLineVariacaoNegativa.setTextSide(VtcIndicator.DEFAULT_TEXT_SIDE.getClass().cast(this.textSide));
 
 					plotLineVtc.setLabel("VTC");
 					plotLineVtc.setText("VTC");
 
-					plotLineVariacaoPositiva.setLabel("VTC +0,5%");
-					plotLineVariacaoPositiva.setText("VTC +0,5%");
+					plotLineVariacaoPositiva.setLabel(String.format("VTC +%.2f%%", this.delta));
+					plotLineVariacaoPositiva.setText(String.format("VTC +%.2f%%", this.delta));
 
-					plotLineVariacaoNegativa.setLabel("VTC -0,5%");
-					plotLineVariacaoNegativa.setText("VTC -0,5%");
+					plotLineVariacaoNegativa.setLabel(String.format("VTC -%.2f%%", this.delta));
+					plotLineVariacaoNegativa.setText(String.format("VTC -%.2f%%", this.delta));
 
 					this.getOutput().add(plotLineVariacaoPositiva);
 					this.getOutput().add(plotLineVariacaoNegativa);
@@ -203,18 +206,15 @@ public class VtcIndicator extends IndicatorPlugin
     @Override
     public void doSetParameters(final Settings settings) {
     	
-//        Functions.logMessage("doSetParameters()");
-
     	this.getValueFromNews = settings.getBoolean("getValueFromNews", true);
 
     	if (!this.getValueFromNews) {
-    		try {
-				NumberFormat nf = NumberFormat.getInstance();
-				nf.setGroupingUsed(true);
-				setVtcValue(nf.parse(settings.getString("vtcValue", "0")).doubleValue());
-			} catch (ParseException e) {
-				Functions.logError("Parsing value from vtcValue field", e);
-			}
+    		Double callValue = null;
+    		Double deltaValue = null;
+    		
+			callValue = settings.getInteger("vtcValue", 0).doubleValue();
+			deltaValue = settings.getDouble("deltaValue", 0.5);
+			setVtcValue(callValue, deltaValue);
     	} else if (!flagLoadedFromPrefs) {
     		loadVtcValueFromPreferences();
     	}
@@ -250,8 +250,9 @@ public class VtcIndicator extends IndicatorPlugin
         return b;
     }
     
-    private void setVtcValue(Double value) {
-    	this.valueVtc = value;
+    private void setVtcValue(Double callValue, Double delta) {
+    	this.valueVtc = callValue;
+    	this.delta = delta;
         this.valueVtcVariacaoPositiva = null;
         this.valueVtcVariacaoNegativa = null;
     }
@@ -299,7 +300,7 @@ public class VtcIndicator extends IndicatorPlugin
             	vencimentoDollar = m.group(1);
             	vtcTitleMessagePattern =  Pattern.compile("Call\\s+para\\s+a\\s+serie\\s+VTC"
             			+ vencimentoDollar
-            			+ ".*\\s+Futuro\\s+([0-9]{3,}\\.[0-9]+)\\s+.*");
+            			+ ".*\\s+Futuro\\s+([0-9]{3,}\\.[0-9]+)\\s+Delta\\s+([0-9]\\.[0-9]+).*");
             }
     	}
     }
@@ -354,16 +355,20 @@ public class VtcIndicator extends IndicatorPlugin
     
     private void proccessNewsMessage(NewsItem newsItem) {
     	if (vtcDateFound == null && newsItem != null && getBarData() != null && dateTimeUtils.isSameDay(newsItem.getDate(), getBarData().getEnd())) {
-        	String vtcStringValue = "";
+        	String callStringValue = "";
+        	String deltaStringValue = "";
         	try {
     			Matcher matcher = vtcTitleMessagePattern.matcher(newsItem.getTitle());
     			
     			if (matcher.find()) {
     				Functions.logMessage("Notícia VTC encontrada: " + newsItem.getTitle());
-    				vtcStringValue = matcher.group(1);
-    				valueVtc = Double.parseDouble(vtcStringValue);
-    				vtcDateFound = getBarData().getEnd();
-    				valueVtc = Functions.roundIntoSecurityIncrementPrice(valueVtc, getBarData().getSecurity());
+    				
+					callStringValue = matcher.group(1);
+    				deltaStringValue = matcher.group(2);
+    				
+    				setVtcValue(Double.parseDouble(callStringValue), Double.parseDouble(deltaStringValue));
+    				this.vtcDateFound = getBarData().getEnd();
+
     				Functions.logMessage("Valor de VTC encontrado na notícia: " + valueVtc);
     				saveVtcValue();
 
@@ -371,7 +376,7 @@ public class VtcIndicator extends IndicatorPlugin
     	            this.listObserver = null;
     			}
     		} catch (NumberFormatException e) {
-    			Functions.logError("Erro ao extrair valor VTC do título da notícia: " + valueVtc, e);
+    			Functions.logError("Erro ao extrair valor VTC do título da notícia: " + valueVtc + " delta=" + deltaStringValue, e);
     		}
     	}
     	
@@ -379,8 +384,9 @@ public class VtcIndicator extends IndicatorPlugin
     
     private void calculateVtcVariations() {
     	if (this.valueVtcVariacaoPositiva == null && this.valueVtcVariacaoNegativa == null) {
-            this.valueVtcVariacaoPositiva = Functions.roundIntoSecurityIncrementPrice(this.valueVtc + (this.valueVtc * 0.005), getBarData().getSecurity());
-            this.valueVtcVariacaoNegativa = Functions.roundIntoSecurityIncrementPrice(this.valueVtc - (this.valueVtc * 0.005), getBarData().getSecurity());
+            Double valorVariacao = this.valueVtc * (this.delta/100);
+    		this.valueVtcVariacaoPositiva = Functions.roundIntoSecurityIncrementPrice(this.valueVtc + valorVariacao, getBarData().getSecurity());
+            this.valueVtcVariacaoNegativa = Functions.roundIntoSecurityIncrementPrice(this.valueVtc - valorVariacao, getBarData().getSecurity());
     	}
     }
     
@@ -393,9 +399,10 @@ public class VtcIndicator extends IndicatorPlugin
     }
     
     private void setValueFromLoadedPreferences() {
-    	if (this.loadedPrefsVtcDate != null && this.loadedPrefsVtcValue != null && getBarData() != null && dateTimeUtils.isSameDay(this.loadedPrefsVtcDate, getBarData().getEnd())) {
+    	if (this.loadedPrefsVtcDate != null && this.loadedPrefsVtcValue != null && this.loadedPrefsVtcDelta != null 
+    			&& getBarData() != null && dateTimeUtils.isSameDay(this.loadedPrefsVtcDate, getBarData().getEnd())) {
 			this.vtcDateFound = this.loadedPrefsVtcDate;
-			setVtcValue(this.loadedPrefsVtcValue);
+			setVtcValue(this.loadedPrefsVtcValue, this.loadedPrefsVtcDelta);
     	}
     }
     
@@ -404,8 +411,10 @@ public class VtcIndicator extends IndicatorPlugin
 			Preferences prefs = InstanceScope.INSTANCE.getNode(PLUGIN_ID);
 			this.loadedPrefsVtcDate = this.vtcDateFound;
 			this.loadedPrefsVtcValue = this.valueVtc;
+			this.loadedPrefsVtcDelta = this.delta;
 			prefs.put(VTC_SAVED_DATE, dateTimeUtils.format(this.vtcDateFound, "dd/MM/yyyy"));
 			prefs.putDouble(VTC_SAVED_VALUE, this.valueVtc);
+			prefs.putDouble(VTC_SAVED_DELTA, this.delta);
 			prefs.flush();
 		} catch (Exception e) {
 			Functions.logError("Error saving VTC Indicator preferences", e);
@@ -420,19 +429,21 @@ public class VtcIndicator extends IndicatorPlugin
 			Preferences prefs = InstanceScope.INSTANCE.getNode(PLUGIN_ID);
 			String dateStr = prefs.get(VTC_SAVED_DATE, null);
 			Double savedVtcValue = prefs.getDouble(VTC_SAVED_VALUE, -1);
+			Double savedDelta = prefs.getDouble(VTC_SAVED_DELTA, -1);
 
 			if (dateStr != null && !dateStr.trim().isEmpty() && savedVtcValue > 0) {
 				this.loadedPrefsVtcDate = dateTimeUtils.parse(dateStr.trim(), "dd/MM/yyyy");
 				this.loadedPrefsVtcValue = savedVtcValue;
+				this.loadedPrefsVtcDelta = savedDelta;
 				setValueFromLoadedPreferences();
 			}
 		} catch (NumberFormatException e) {
 			this.vtcDateFound = null;
-			setVtcValue(null);
+			setVtcValue(null, null);
 			Functions.logError("Error reading VTC_SAVED_DATE from preferences", e);
 		} catch (ParseException e) {
 			this.vtcDateFound = null;
-			setVtcValue(null);
+			setVtcValue(null, null);
 			Functions.logError("Error reading VTC_SAVED_VALUE from preferences", e);
 		} finally {
 			flagLoadedFromPrefs = true;
