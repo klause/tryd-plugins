@@ -59,6 +59,13 @@ Para o indicador funcionar no replay, desmarque a opção "Obter Valor do VTC da
 
 Para colocá-lo no gráfico, acesse Novo Indicador -> Volume -> Variação da VWAP
 
+## Volatilidade da PTAX
+
+A estratégia que usa a vol da PTAX foi repassada pelo mentor e trader Leo Nonato (https://linktr.ee/leononatotrader)
+
+Para colocá-lo no gráfico, acesse Novo Indicador -> Dados de Mercado -> Volatilidade da PTAX
+
+
 ## Removendo os indicadores do gráfico
 
-Para remover o indicador do gráfico caso ele não estiver visível, acesse o menu do gráfico com o botão direito do mouse e vá em Mais -> Mudar Visibilidade de Objetos. Selecionde o indicador que deseja remover e pressione a tecla Delete.
+Para remover qualquer indicador do gráfico caso ele não esteja visível, acesse o menu do gráfico com o botão direito do mouse e vá em Mais -> Mudar Visibilidade de Objetos. Selecionde o indicador que deseja remover e pressione a tecla Delete.
