@@ -72,18 +72,33 @@ Se já tive um eclipse instalado, sua versão provavelmente pode ser usada, não
  * Acesso o menu Run - Run Configurations...
  * Crie uma nova configuração do tipo Eclipse Application e configure as propriedades conforme abaixo:
 
+* Atentar para os valores de Location e Execution environment
+
 ![Run - Main](run_main.png)
 
  * Os argumentos da VM já aparecerão configurados, são os mesmo da Target Platform (altere apenas se precisar de argumentos específicos para rodar seu plugin)
+ * Atentar para a opção Working directory
 
 ![Run - Arguments](run_arguments.png)
 
- * Na aba Plug-ins selecione em Workspace o(s) plugin(s) que deseja incluir nesta executação do Tryd (geralmente o plugin que você está testando ou depurando)
+ * Na aba Plug-ins selecione em Workspace o(s) plugin(s) que deseja incluir nesta execução do Tryd (geralmente o plugin que você está testando ou depurando)
  * Selecione todos os plugins de Target Platform com exceção do plugin que você está testando ou depurando se ele aparecer na lista (acontece quando vc já instalou o plugin no Tryd)
  
- ![Run](run_plugins.png)
+ ![Run - Plugins](run_plugins.png)
 
- ![Run](run_configuration.png)
+ * Atentar para a opção Use an existing config.ini file as a template
+
+ ![Run - Configuration](run_configuration.png)
 
 # Executando o plugin
- * Para executar o plugin, acesso 
+ * Para executar o plugin, clique na seta do ícone de execuções e selecione a execução desejada.
+
+ ![Running](running.png)
+ 
+ * Para executar o plugin em modo debug, clique na seta do ícone de debug e selecione a execução desejada.
+
+ ![Debugging](debugging.png)
+ 
+ * O indicador estará disponível para ser inserido no gráfico
+
+ ![Indicador no Tryd](tryd_inserir_indicador.png)
