@@ -4,7 +4,7 @@ Indicadores para a plataforma de negociação Tryd
 
 # Termos de uso
 
-**Os plugins desenvolvidos por mim tem a finalizade de auxiliar a comunidade de trades do Brasil. Os plugins foram testados antes de serem disponibilizados, porém não me responsabilizo por algum problema que possa ocorrer, ao utilizar qualquer plugin você concorda que o autor não tem nenhuma responsabilidade por danos causados.**
+**Os plugins desenvolvidos por mim tem a finalizade de auxiliar a comunidade de traders do Brasil. Os plugins foram testados antes de serem disponibilizados, porém não me responsabilizo por algum problema que possa ocorrer, ao utilizar qualquer plugin você concorda que o autor não tem nenhuma responsabilidade por danos causados.**
 
 O código fonte dos plugins é aberto, fique a vontade para contribuir, reportar erros e dar sugestões de melhoria.
 
