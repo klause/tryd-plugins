@@ -34,10 +34,11 @@ Se já tive um eclipse instalado, sua versão provavelmente pode ser usada, não
 
   ![Environment](platform_env.png)
 
-* Na aba Arguments ente o valor abaixo no campo VM Arguments (ctrl-c ctrl-v):
+  * Na aba Arguments ente o valor abaixo no campo VM Arguments (ctrl-c ctrl-v):
   
-  `-Dosgi.requiredJavaVersion=1.8 -Dosgi.instance.area.default=@user.home/eclipse-workspace -XX:+UseG1GC -XX:+UseStringDeduplication --add-modules=ALL-SYSTEM -Dosgi.requiredJavaVersion=1.8 -Dosgi.dataAreaRequiresExplicitInit=true -Xms256m -Xmx1024m --add-modules=ALL-SYSTEM -Declipse.p2.max.threads=10 -Doomph.update.url=http://download.eclipse.org/oomph/updates/milestone/latest -Doomph.redirection.index.redirection=index:/->http://git.eclipse.org/c/oomph/org.eclipse.oomph.git/plain/setups/`
-  
+  `-Dosgi.requiredJavaVersion=1.8 --add-modules=ALL-SYSTEM -XX:+UseG1GC -XX:+UseStringDeduplication -Dosgi.requiredJavaVersion=1.8 -Dosgi.dataAreaRequiresExplicitInit=true -Xms256m -Xmx1024m -Declipse.p2.max.threads=10 -Doomph.update.url=http://download.eclipse.org/oomph/updates/milestone/latest -Doomph.redirection.index.redirection=index:/->http://git.eclipse.org/c/oomph/org.eclipse.oomph.git/plain/setups/`
+  * Na janela Target Platform marque a plataforma como ativa
+
 ## Criar projeto de plug-in
  * Crie um projeto do tipo Plug-in acessando o menu File - New - Project...
  * Selecione o wizard 'Plug-in Project'
@@ -51,5 +52,38 @@ Se já tive um eclipse instalado, sua versão provavelmente pode ser usada, não
  
  * Não selecione nenhum template na janela Templates
 
-## Importar indicador de exemplo
- * Se preferir, você pode importar o projeto de exemplo disponível em: 
+## Importar indicador
+ * Se preferir, você pode importar um dos indicadores deste repositório
+ * Clone ou faça download do repositório e importe no eclipse
+
+## Configurar propriedades do projeto
+ * Verifique as configurações das propriedades do projeto conforme abaixo.
+ 
+ ![Java Build Path - Source](properties_souce.png)
+ 
+ ![Java Build Path - Libraries](properties_libraries.png)
+ 
+ * Mesmo o Tryd rodando com JRE 1.8, o runtime dos plugins deve ser configurado como JavaSE-1.7
+
+ ![Java Compiler](properties_compiler.png)
+ 
+## Configurar execução do plugin
+
+ * Acesso o menu Run - Run Configurations...
+ * Crie uma nova configuração do tipo Eclipse Application e configure as propriedades conforme abaixo:
+
+![Run - Main](run_main.png)
+
+ * Os argumentos da VM já aparecerão configurados, são os mesmo da Target Platform (altere apenas se precisar de argumentos específicos para rodar seu plugin)
+
+![Run - Arguments](run_arguments.png)
+
+ * Na aba Plug-ins selecione em Workspace o(s) plugin(s) que deseja incluir nesta executação do Tryd (geralmente o plugin que você está testando ou depurando)
+ * Selecione todos os plugins de Target Platform com exceção do plugin que você está testando ou depurando se ele aparecer na lista (acontece quando vc já instalou o plugin no Tryd)
+ 
+ ![Run](run_plugins.png)
+
+ ![Run](run_configuration.png)
+
+# Executando o plugin
+ * Para executar o plugin, acesso 
