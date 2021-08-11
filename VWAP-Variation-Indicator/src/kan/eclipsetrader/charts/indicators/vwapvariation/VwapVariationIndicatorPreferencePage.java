@@ -10,7 +10,7 @@ import net.sourceforge.eclipsetrader.core.ui.widgets.FlatCombo;
 public class VwapVariationIndicatorPreferencePage extends IndicatorPluginPreferencePage
 {
     @Override
-    protected void doCreateContents(final Composite composite) {
+    protected void doCreateFullContents(final Composite composite) {
     	
         addLineTypeSelector(composite, "lineTypeVwap", Messages.VwapVarPreferencePage_LineType_Vwap, PlotLineType.DASH, "lineThicknessVwap", 1);
         addColorSelector(composite, "lineColorVwap", Messages.VwapVarPreferencePage_LineColor_Vwap,  VwapVariationIndicator.DEFAULT_LINE_COLLOR);
@@ -36,6 +36,6 @@ public class VwapVariationIndicatorPreferencePage extends IndicatorPluginPrefere
 		combo.setData(PlotLineType.DASH.getName(), (Object) PlotLineType.DASH);
 		combo.add(PlotLineType.INVISIBLE.getName());
 		combo.setData(PlotLineType.INVISIBLE.getName(), (Object) PlotLineType.INVISIBLE);
-	}    
-    
+	}
+
 }

@@ -10,7 +10,7 @@ import net.sourceforge.eclipsetrader.core.ui.widgets.FlatCombo;
 public class VolPtaxIndicatorPreferencePage extends IndicatorPluginPreferencePage
 {
     @Override
-    protected void doCreateContents(final Composite composite) {
+    protected void doCreateFullContents(final Composite composite) {
     	
         addLineTypeSelector(composite, "lineTypeUpperBoundary", Messages.VolPtaxPreferencePage_LineType_UpperBoundary, PlotLineType.DASH, "lineThicknessUpperBoundary", 1);
         addColorSelector(composite, "lineColorUpperBoundary", Messages.VolPtaxPreferencePage_LineColor_UpperBoundary,  VolPtaxIndicator.DEFAULT_UPPER_LINE_COLLOR);
