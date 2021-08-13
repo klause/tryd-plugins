@@ -102,3 +102,13 @@ Se já tive um eclipse instalado, sua versão provavelmente pode ser usada, não
  * O indicador estará disponível para ser inserido no gráfico
 
  ![Indicador no Tryd](tryd_inserir_indicador.png)
+
+# Exportando o plugin
+ * Siga as instruções de como criar um prejeto feature e um update site em: https://www.vogella.com/tutorials/EclipsePlugin/article.html#exercise-create-a-feature-for-your-plug-in
+
+# Instalando o plugin no Tryd
+ * Abra a plataforma Tryd e acesse o menu Ajuda - Instalar novo programa
+ * Clique em Adicionar (repositório)
+ * Selecione Local e especifique o caminho do plugin exportado
+ * Especifique um nome para identificar esse repositório
+ * Escolha o repositório adicionado e marque os plugins que deseja instalar
