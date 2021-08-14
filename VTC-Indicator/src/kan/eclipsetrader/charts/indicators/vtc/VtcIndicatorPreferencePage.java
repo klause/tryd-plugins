@@ -18,7 +18,7 @@ public class VtcIndicatorPreferencePage extends IndicatorPluginPreferencePage
 	}
 	
 	@Override
-    protected void doCreateContents(final Composite composite) {
+    protected void doCreateFullContents(final Composite composite) {
     	
         Button valueFromNewsSelector = addBooleanSelector(composite, "getValueFromNews", Messages.VtcIndicatorPreferencePage_GetValueFromNews, true);
         
@@ -52,17 +52,17 @@ public class VtcIndicatorPreferencePage extends IndicatorPluginPreferencePage
         addShowValueControl(composite, VtcIndicator.DEFAULT_V_SCALE_VALUE);
     }
     
-    @Override
-    protected void doFillLineTypeComboSelector(final FlatCombo combo) {
+	@Override
+	protected void doFillLineTypeComboSelector(FlatCombo combo) {
+        combo.setData(Integer.toString(combo.getItemCount()), PlotLineType.LINE);
         combo.add(PlotLineType.LINE.getName());
-        combo.setData(PlotLineType.LINE.getName(), (Object)PlotLineType.LINE);
+        combo.setData(Integer.toString(combo.getItemCount()), PlotLineType.DOT);
         combo.add(PlotLineType.DOT.getName());
-        combo.setData(PlotLineType.DOT.getName(), (Object)PlotLineType.DOT);
+        combo.setData(Integer.toString(combo.getItemCount()), PlotLineType.DASH);
         combo.add(PlotLineType.DASH.getName());
-        combo.setData(PlotLineType.DASH.getName(), (Object)PlotLineType.DASH);
+        combo.setData(Integer.toString(combo.getItemCount()), PlotLineType.INVISIBLE);
         combo.add(PlotLineType.INVISIBLE.getName());
-        combo.setData(PlotLineType.INVISIBLE.getName(), (Object)PlotLineType.INVISIBLE);
-    }
+	}
 
     /*
     protected Combo addOrigemPrecoSelector(final Composite composite) {

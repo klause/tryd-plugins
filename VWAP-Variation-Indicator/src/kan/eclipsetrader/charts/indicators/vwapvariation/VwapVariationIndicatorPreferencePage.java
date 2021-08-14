@@ -28,14 +28,14 @@ public class VwapVariationIndicatorPreferencePage extends IndicatorPluginPrefere
 
 	@Override
 	protected void doFillLineTypeComboSelector(FlatCombo combo) {
-		combo.add(PlotLineType.LINE.getName());
-		combo.setData(PlotLineType.LINE.getName(), (Object) PlotLineType.LINE);
-		combo.add(PlotLineType.DOT.getName());
-		combo.setData(PlotLineType.DOT.getName(), (Object) PlotLineType.DOT);
-		combo.add(PlotLineType.DASH.getName());
-		combo.setData(PlotLineType.DASH.getName(), (Object) PlotLineType.DASH);
-		combo.add(PlotLineType.INVISIBLE.getName());
-		combo.setData(PlotLineType.INVISIBLE.getName(), (Object) PlotLineType.INVISIBLE);
+        combo.setData(Integer.toString(combo.getItemCount()), PlotLineType.LINE);
+        combo.add(PlotLineType.LINE.getName());
+        combo.setData(Integer.toString(combo.getItemCount()), PlotLineType.DOT);
+        combo.add(PlotLineType.DOT.getName());
+        combo.setData(Integer.toString(combo.getItemCount()), PlotLineType.DASH);
+        combo.add(PlotLineType.DASH.getName());
+        combo.setData(Integer.toString(combo.getItemCount()), PlotLineType.INVISIBLE);
+        combo.add(PlotLineType.INVISIBLE.getName());
 	}
 
 }

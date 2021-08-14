@@ -2,15 +2,15 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Volatilidade da PTAX
 Bundle-SymbolicName: kan.eclipsetrader.charts.indicators.volptax;singleton:=true
-Bundle-Version: 1.0.0
+Bundle-Version: 1.0.2
 Bundle-Vendor: Klause
 Bundle-Localization: plugin
 Export-Package: kan.eclipsetrader.charts.indicators.volptax
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Automatic-Module-Name: Vol-Ptax-Indicator
 Bundle-ActivationPolicy: lazy
-Require-Bundle: net.sourceforge.eclipsetrader.charts,
- net.sourceforge.eclipsetrader.core,
+Require-Bundle: net.sourceforge.eclipsetrader.charts;bundle-version="6.4.0",
+ net.sourceforge.eclipsetrader.core;bundle-version="6.4.0",
  org.eclipse.ui,
  org.eclipse.core.expressions,
  org.eclipse.core.runtime
